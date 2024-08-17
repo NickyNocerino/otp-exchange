@@ -1,4 +1,5 @@
 # local only files
 bin/*
 *.temp
-
+*_temp.rs
+*_temp
