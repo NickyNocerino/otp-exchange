@@ -12,6 +12,23 @@ pub struct Packet256 {
     occupancy: i32,
 }
 
+pub struct Packet1B {
+    data:u8
+}
+
+pub struct Packet1KB {
+    data:[Packet1B;1024],
+    pub  occupancy: u32,
+
+}
+
+pub struct Packet1MB {
+    data:[Packet1KB;1024],
+    occupancy: i32,
+
+}
+
+
 impl BitXor for Packet64 {
     type Output = Self;
     fn bitxor(self, other:Self) -> Self {
@@ -25,6 +42,23 @@ impl Packet64 {
     }
 
     pub fn access(self) -> u64 {
+        self.data
+    }
+}
+
+impl BitXor for Packet1B {
+    type Output = Self;
+    fn bitxor(self, other:Self) -> Self {
+        Self{data:self.access()^other.access()}
+    }
+}
+
+impl Packet1B {
+    pub fn new(data: u8) -> Packet1B {
+        Packet64{data:data}
+    }
+
+    pub fn access(self) -> u8 {
         self.data
     }
 }
@@ -91,6 +125,54 @@ impl Packet256 {
             y => {
                 println!("UHOH, illegal occupancy value {}", y);
                 Packet64::new(0)
+            }
+        }
+    }
+}
+
+impl BitXor for Packet1KB {
+    type Output = Self;
+    fn bitxor(self, other:Self) -> Self {
+        if self.occupancy != other.occupancy {
+            println!("WARNING, trying to xor packets with different fill levels");
+        }
+        let out[Packet1B:1024];
+        for i in 0..1024 {
+            out[i] = self.data[i]^other.data[i];
+        }
+        Self{data:out, occupancy:self.occupancy}
+    }
+}
+
+impl Packet1KB {
+    pub fn new(data: [Packet1B:1024]) -> Packet1B {
+        Packet1KB{data:data}
+    }
+
+    pub fn add(mut self, data:Packet1B) {
+        match self.occupancy {
+            0..1023 => {
+                self.data[self.occupancy] = data;
+                self.occupancy += 1;
+            }
+            1024.. => {
+                println!("WARNING, adding Packet1B to full Packet1KB")
+            }
+        }
+    }
+    pub fn pop(mut self) -> Packet1B {
+        match self.occupancy {
+            0 => {
+                println!("WARNING, popping from Packet1KB with occupancy 0")
+                self.data[0]
+            }
+            1..1023 => {
+                self.occupancy -= 1;
+                self.data[self.occupancy];
+            }
+            1024.. => {
+                println!("WARNING, Packet1KB has occupancy over 1024")
+                self.data[0]
             }
         }
     }
