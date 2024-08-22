@@ -1,4 +1,5 @@
 use std::ops::{BitXor};
+use std::fmt::Write;
 
 pub struct Packet64 {
     data: u64,
@@ -18,7 +19,7 @@ pub struct Packet1B {
 
 pub struct Packet1KB {
     data:[Packet1B;1024],
-    pub  occupancy: u32,
+    pub  occupancy: usize,
 
 }
 
@@ -55,7 +56,7 @@ impl BitXor for Packet1B {
 
 impl Packet1B {
     pub fn new(data: u8) -> Packet1B {
-        Packet64{data:data}
+        Packet1B{data:data}
     }
 
     pub fn access(self) -> u8 {
@@ -136,7 +137,7 @@ impl BitXor for Packet1KB {
         if self.occupancy != other.occupancy {
             println!("WARNING, trying to xor packets with different fill levels");
         }
-        let out[Packet1B:1024];
+        let out:[Packet1B;1024];
         for i in 0..1024 {
             out[i] = self.data[i]^other.data[i];
         }
@@ -145,35 +146,49 @@ impl BitXor for Packet1KB {
 }
 
 impl Packet1KB {
-    pub fn new(data: [Packet1B:1024]) -> Packet1B {
-        Packet1KB{data:data}
+    pub fn new() -> Packet1KB {
+        let data: [Packet1B;1024];
+        for i in 0..1024 {
+            data [i] = Packet1B::new(0);
+        }
+        Packet1KB{data:data, occupancy:0}
     }
+    // 
+    // pub fn add(mut self, data:Packet1B) {
+    //     match self.occupancy {
+    //         0..=1023 => {
+    //             self.data[self.occupancy] = data;
+    //             self.occupancy += 1;
+    //         }
+    //         1024.. => {
+    //             println!("WARNING, adding Packet1B to full Packet1KB");
+    //         }
+    //     }
+    // }
+    // pub fn pop(mut self) -> Packet1B {
+    //     match self.occupancy {
+    //         0 => {
+    //             println!("WARNING, popping from Packet1KB with occupancy 0");
+    //             self.data[0]
+    //         }
+    //         1..=1023 => {
+    //             self.occupancy -= 1;
+    //             self.data[self.occupancy]
+    //         }
+    //         1024.. => {
+    //             println!("WARNING, Packet1KB has occupancy over 1024");
+    //             self.data[0]
+    //         }
+    //     }
+    // }
+    pub fn to_hex(self) -> String {
+        let mut hex_string = String::new();
+        let mut temp = String::new();
+        for i in 0..self.occupancy {
+            write!(temp, "{:02x}", self.data[i].access());
+            hex_string.push_str(&temp);
+        }
+        hex_string
 
-    pub fn add(mut self, data:Packet1B) {
-        match self.occupancy {
-            0..1023 => {
-                self.data[self.occupancy] = data;
-                self.occupancy += 1;
-            }
-            1024.. => {
-                println!("WARNING, adding Packet1B to full Packet1KB")
-            }
-        }
-    }
-    pub fn pop(mut self) -> Packet1B {
-        match self.occupancy {
-            0 => {
-                println!("WARNING, popping from Packet1KB with occupancy 0")
-                self.data[0]
-            }
-            1..1023 => {
-                self.occupancy -= 1;
-                self.data[self.occupancy];
-            }
-            1024.. => {
-                println!("WARNING, Packet1KB has occupancy over 1024")
-                self.data[0]
-            }
-        }
     }
 }
