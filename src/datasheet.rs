@@ -5,7 +5,8 @@ use rand::prelude::*;
 
 use crate::traits::GetData;
 
-const  MAX_BYTES:usize = 1024;
+const MAX_BYTES:usize = 1024;
+const MAX_SHEETS:usize = 16;
 
 #[derive(Debug, Clone, Copy)]
 pub struct DataSheet {
@@ -23,11 +24,20 @@ impl DataSheet {
         }
     }
 
-    pub fn random() -> Self {
+    pub fn new_zeros() -> Self {
+        let mut data = [0u8;MAX_BYTES];
+        Self{
+            size_bytes: MAX_BYTES,
+            max_size_bytes:MAX_BYTES,
+            data: data,
+        }
+    }
+
+    pub fn new_random() -> Self {
         let mut data = [0u8;MAX_BYTES];
         rand::thread_rng().fill(&mut data[..]);
         Self{
-            size_bytes: 0,
+            size_bytes: MAX_BYTES,
             max_size_bytes:MAX_BYTES,
             data: data,
         }
