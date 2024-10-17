@@ -147,3 +147,30 @@ impl DataBook {
         out
     }
 }
+
+impl GetData for DataBook {
+    fn get_size_bytes(&self) -> usize {
+        self.lens.iter().sum()
+    }
+    fn get_max_size_bytes(&self) -> usize {
+        self.max_size * MAX_BYTES
+    }
+    fn get_byte(&self, index:usize) -> u8 {
+        if index > self.get_size_bytes() {
+            panic!("index access out of bounds")
+        }
+        let mut remainder:usize = index;
+        for i in 0..self.size {
+            if self.lens[i] < remainder {
+                remainder -= self.lens[i];
+            }
+            else {
+                let file_name = format!("DATASHEET{:#09}.bin", i);
+                let full_path = format!("{}/{}", *self.location.clone() ,file_name);
+                let sheet = DataSheet::from_file(&full_path);
+                return sheet.get_byte(remainder)
+            }
+        }
+        panic!("should never reach here")
+    }
+}

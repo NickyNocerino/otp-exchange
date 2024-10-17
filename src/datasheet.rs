@@ -116,14 +116,14 @@ impl DataSheet {
 }
 
 impl GetData for DataSheet {
-    fn get_size(&self) -> usize {
+    fn get_size_bytes(&self) -> usize {
         self.size_bytes
     }
-    fn get_max_size(&self) -> usize {
+    fn get_max_size_bytes(&self) -> usize {
         self.max_size_bytes
     }
-    fn get_1b(&self, index:usize) -> u8 {
-        if index > self.size_bytes {
+    fn get_byte(&self, index:usize) -> u8 {
+        if index > self.get_size_bytes() {
             panic!("index access out of bounds")
         }
         self.data[index]
