@@ -11,4 +11,12 @@ pub fn main(){
 
     let dbook = DataBook::new_random("bin/temp_databook");
 
+    dbook.to_zip("bin/temp_databook.zip");
+
+    let dbook2 = DataBook::from_zip("bin/temp_databook.zip", "bin/temp_databook_2");
+    println!("{}", dbook.size);
+    println!("{}", dbook.location);
+    println!("{}", dbook2.size);
+    println!("{}", dbook2.location);
+
 }
