@@ -1,5 +1,6 @@
 use std::fmt::Write;
 use std::fs;
+use std::cmp;
 
 use rand::prelude::*;
 
@@ -47,7 +48,7 @@ impl DataSheet {
         let file_data = fs::read(filepath).expect("unable to read file");
         let mut data = [0u8;MAX_BYTES];
         for i in 0..MAX_BYTES {
-            if i <= file_data.len(){
+            if i < file_data.len(){
                 data[i] = file_data[i];
             }
             else {
@@ -57,6 +58,24 @@ impl DataSheet {
 
         Self{
             size_bytes: 0,
+            max_size_bytes:MAX_BYTES,
+            data: data,
+        }
+    }
+
+    pub fn from_vec(in_data:&Vec<u8>) -> Self{
+        let mut data = [0u8;MAX_BYTES];
+        for i in 0..MAX_BYTES {
+            if i < in_data.len(){
+                data[i] = in_data[i];
+            }
+            else {
+                data[i] = 0;
+            }
+        }
+
+        Self{
+            size_bytes: cmp::min(MAX_BYTES, in_data.len()),
             max_size_bytes:MAX_BYTES,
             data: data,
         }

@@ -1,5 +1,6 @@
 use std::fmt::Write;
 use std::fs;
+use std::cmp;
 
 use rand::prelude::*;
 
@@ -50,6 +51,35 @@ impl DataBook {
             DataSheet::new_random().to_file(&full_path);
 
         }
+        Self {
+            size:MAX_SHEETS,
+            max_size: MAX_SHEETS,
+            location: Box::new(target_dir.clone().to_owned()),
+            lens: [MAX_BYTES;MAX_SHEETS]
+        }
+    }
+
+    pub fn from_vec(target_dir:&str, data:&Vec<u8>) -> Self {
+        let size = cmp::min(data.len(), MAX_BYTES*MAX_SHEETS);
+        let mut count: usize = 0;
+        fs::create_dir_all(target_dir).expect("failed to create directory");
+        for i in 0..MAX_SHEETS {
+            let file_name = format!("DATASHEET{:#09}.bin", i);
+            let full_path = format!("{}/{}", target_dir,file_name);
+            let mut temp = Vec::<u8>::new();
+            for j in 0..MAX_BYTES {
+                if count < size {
+                    temp.push(data[count]);
+                }
+                else {
+                    temp.push(0);
+                }
+                count+=1;
+            }
+            DataSheet::from_vec(&temp).to_file(&full_path)
+
+        }
+
         Self {
             size:MAX_SHEETS,
             max_size: MAX_SHEETS,
