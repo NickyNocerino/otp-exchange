@@ -59,9 +59,12 @@ impl DataBook {
         }
     }
 
+    //TODO: pub fn from_dir(target_dir) -> Self {}
+
     pub fn from_vec(target_dir:&str, data:&Vec<u8>) -> Self {
         let size = cmp::min(data.len(), MAX_BYTES*MAX_SHEETS);
         let mut count: usize = 0;
+        let mut lens = [0usize;MAX_SHEETS];
         fs::create_dir_all(target_dir).expect("failed to create directory");
         for i in 0..MAX_SHEETS {
             let file_name = format!("DATASHEET{:#09}.bin", i);
@@ -72,19 +75,31 @@ impl DataBook {
                     temp.push(data[count]);
                 }
                 else {
-                    temp.push(0);
+                    lens[i] = temp.len();
+                    DataSheet::from_vec(&temp).to_file(&full_path);
+                    return Self {
+                        size:i+1,
+                        max_size: MAX_SHEETS,
+                        location: Box::new(target_dir.clone().to_owned()),
+                        lens: lens
+                    };
                 }
                 count+=1;
             }
-            DataSheet::from_vec(&temp).to_file(&full_path)
-
+            lens[i] = MAX_BYTES;
+            DataSheet::from_vec(&temp).to_file(&full_path);
         }
 
         Self {
             size:MAX_SHEETS,
             max_size: MAX_SHEETS,
             location: Box::new(target_dir.clone().to_owned()),
-            lens: [MAX_BYTES;MAX_SHEETS]
+            lens: lens
         }
+    }
+
+    pub fn to_vec() -> Vec<u8> {
+        let out = Vec::<u8>::new();
+        out
     }
 }

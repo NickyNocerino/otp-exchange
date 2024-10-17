@@ -1,6 +1,7 @@
 use std::fmt::Write;
 use std::fs;
 use std::cmp;
+use std::ops::BitXor;
 
 use rand::prelude::*;
 
@@ -14,6 +15,25 @@ pub struct DataSheet {
     pub size_bytes:usize,
     pub max_size_bytes:usize,
     pub data: [u8;MAX_BYTES],
+}
+
+impl BitXor for DataSheet {
+    type Output = Self;
+
+    fn bitxor(self, other: Self) -> Self {
+        let size = cmp::min(self.size_bytes, other.size_bytes);
+        let mut data = [0u8;MAX_BYTES];
+        for i in 0..MAX_BYTES {
+            if i < size {
+                data[i] = self.data[i]^other.data[i];
+            }
+        }
+        Self{
+            size_bytes: size,
+            max_size_bytes:MAX_BYTES,
+            data:data,
+        }
+    }
 }
 
 impl DataSheet {
