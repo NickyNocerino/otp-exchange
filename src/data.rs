@@ -1,4 +1,8 @@
+use std::fmt::Write;
+
 use rand::prelude::*;
+
+use crate::traits::GetData;
 
 #[derive(Debug, Clone, Copy)]
 pub struct DataSheet {
@@ -24,6 +28,28 @@ impl DataSheet {
             max_size_bytes:1024,
             data: data,
         }
+    }
 
+    pub fn to_string(&self) -> String {
+        let mut s = String::new();
+        for byte in self.data {
+            write!(&mut s, "{:#04X} ", byte).expect("Unable to write");
+        }
+        s
+    }
+}
+
+impl GetData for DataSheet {
+    fn get_size(&self) -> usize {
+        self.size_bytes
+    }
+    fn get_max_size(&self) -> usize {
+        self.max_size_bytes
+    }
+    fn get_1b(&self, index:usize) -> u8 {
+        if index > self.size_bytes {
+            panic!("index access out of bounds")
+        }
+        self.data[index]
     }
 }
