@@ -5,10 +5,11 @@ use std::ops::BitXor;
 
 use rand::prelude::*;
 
+use crate::otp::OneTimePad;
 use crate::traits::GetData;
 
-const MAX_BYTES:usize = 1024;
-const MAX_SHEETS:usize = 16;
+const MAX_BYTES:usize = OneTimePad::MAX_BYTES;
+const MAX_SHEETS:usize = OneTimePad::MAX_SHEETS;
 
 #[derive(Debug, Clone, Copy)]
 pub struct DataSheet {

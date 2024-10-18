@@ -11,12 +11,12 @@ pub fn main(){
 
     let mut encrypted = one_time_pad_alice.encrypt(&message.to_owned().into_bytes());
 
-    println!("encrypted message: {:?}", String::from_utf8_lossy(&encrypted));
+    println!("encrypted message: {}", String::from_utf8_lossy(&encrypted));
 
     //decrypt and encrypt do the same thing, its just to help show off whats happening
     let mut decrypted = one_time_pad_bob.decrypt(&encrypted);
 
-    println!("decrypted message: {:?}", String::from_utf8_lossy(&decrypted));
+    println!("decrypted message: {}", String::from_utf8_lossy(&decrypted));
 
     let message_2 = "we can do this in both direction so long as we stay in phase";
 
@@ -24,11 +24,11 @@ pub fn main(){
 
     encrypted = one_time_pad_bob.encrypt(&message_2.to_owned().into_bytes());
 
-    println!("encrypted message: {:?}", String::from_utf8_lossy(&encrypted));
+    println!("encrypted message: {}", String::from_utf8_lossy(&encrypted));
 
     decrypted = one_time_pad_alice.decrypt(&encrypted);
 
-    println!("decrypted message: {:?}", String::from_utf8_lossy(&decrypted));
+    println!("decrypted message: {}", String::from_utf8_lossy(&decrypted));
 
-    println!(" used {} bytes of {} total", one_time_pad_bob.consumed, one_time_pad_bob.pad.get_size_bytes())
+    println!("used {} bytes of {} total", one_time_pad_bob.consumed, one_time_pad_bob.pad.get_size_bytes())
 }
