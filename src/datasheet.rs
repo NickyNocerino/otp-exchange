@@ -46,7 +46,7 @@ impl DataSheet {
     }
 
     pub fn new_zeros() -> Self {
-        let mut data = [0u8;MAX_BYTES];
+        let data = [0u8;MAX_BYTES];
         Self{
             size_bytes: MAX_BYTES,
             max_size_bytes:MAX_BYTES,
@@ -67,17 +67,16 @@ impl DataSheet {
     pub fn from_file(filepath:&str) -> Self {
         let file_data = fs::read(filepath).expect("unable to read file");
         let mut data = [0u8;MAX_BYTES];
+        let mut size = 0;
         for i in 0..MAX_BYTES {
             if i < file_data.len(){
                 data[i] = file_data[i];
-            }
-            else {
-                data[i] = 0;
+                size += 1;
             }
         }
 
         Self{
-            size_bytes: 0,
+            size_bytes: size,
             max_size_bytes:MAX_BYTES,
             data: data,
         }
