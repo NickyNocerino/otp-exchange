@@ -19,6 +19,7 @@ impl OneTimePad {
             panic!("Attempting to encrypt beyond the size of pad")
         }
         let pad_data = self.pad.get_bytes(self.consumed, size);
+        self.consumed += size;
         let mut out = Vec::<u8>::new();
         for i in 0..size {
             out.push(pad_data[i]^data[i]);

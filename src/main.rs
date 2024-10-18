@@ -1,4 +1,3 @@
-use otp_exchange::datasheet::DataSheet;
 use otp_exchange::databook::DataBook;
 use otp_exchange::otp::OneTimePad;
 use otp_exchange::traits::GetData;
@@ -30,4 +29,6 @@ pub fn main(){
     decrypted = one_time_pad_alice.decrypt(&encrypted);
 
     println!("decrypted message: {:?}", String::from_utf8_lossy(&decrypted));
+
+    println!(" used {} bytes of {} total", one_time_pad_bob.consumed, one_time_pad_bob.pad.get_size_bytes())
 }
