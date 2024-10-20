@@ -98,7 +98,7 @@ impl DataBook {
             let file_name = format!("DATASHEET{:#09}.bin", i);
             let full_path = format!("{}/{}", target_dir,file_name);
             let mut temp = Vec::<u8>::new();
-            for j in 0..MAX_BYTES {
+            for _j in 0..MAX_BYTES {
                 if count < size {
                     temp.push(data[count]);
                 }

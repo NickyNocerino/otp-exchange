@@ -9,7 +9,7 @@ use crate::otp::OneTimePad;
 use crate::traits::GetData;
 
 const MAX_BYTES:usize = OneTimePad::MAX_BYTES;
-const MAX_SHEETS:usize = OneTimePad::MAX_SHEETS;
+//const MAX_SHEETS:usize = OneTimePad::MAX_SHEETS;
 
 #[derive(Debug, Clone, Copy)]
 pub struct DataSheet {

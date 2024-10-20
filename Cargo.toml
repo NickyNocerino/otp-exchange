@@ -1,8 +1,9 @@
 [package]
-name = "otp-exchange"
+name = "otp_exchange"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
 zip-extensions = "0.8.1"
+pyo3 = { version = "0.22.5", features = ["extension-module"] }
