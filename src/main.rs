@@ -34,5 +34,8 @@ pub fn main(){
 
     println!("decrypted message: {}", String::from_utf8_lossy(&decrypted));
 
+    one_time_pad_bob.encrypt_file("bin/sample.txt", "bin/encrypted_sample.bin");
+    one_time_pad_alice.decrypt_file("bin/encrypted_sample.bin", "bin/decrypted_sample.txt");
+
     println!("used {} bytes of {} total", one_time_pad_bob.consumed, one_time_pad_bob.pad.get_size_bytes())
 }

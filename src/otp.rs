@@ -1,3 +1,5 @@
+use std::fs;
+
 use crate::databook::DataBook;
 use crate::traits::*;
 
@@ -36,9 +38,29 @@ impl OneTimePad {
         out
     }
 
+    pub fn encrypt_file(&mut self, target_source_file:&str, target_dest_file:&str) {
+        let file_data:Vec<u8> = fs::read(target_source_file).expect("unable to read file");
+        let size = file_data.len();
+        if self.consumed + size > self.pad.get_size_bytes() {
+            panic!("Attempting to encrypt beyond the size of pad")
+        }
+        let pad_data = self.pad.get_bytes(self.consumed, size);
+        self.consumed += size;
+        let mut out = Vec::<u8>::new();
+        for i in 0..size {
+            out.push(pad_data[i]^file_data[i]);
+        }
+        fs::write(target_dest_file, out).expect("cannot write to file");
+
+    }
+
     pub fn decrypt(& mut self, data:Vec<u8>) -> Vec<u8> {
         // For 1 time pads, encrypting and decryyping is the same, neat huh!
         self.encrypt(data)
+    }
+
+    pub fn decrypt_file(&mut self, target_source_file:&str, target_dest_file:&str) {
+        self.encrypt_file(target_source_file, target_dest_file);
     }
 
 }
