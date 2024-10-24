@@ -24,8 +24,7 @@ impl OneTimePad {
         }
     }
 
-    #[getter(remaining)]
-    pub fn get_remaining(&self) -> usize {
+    pub fn remaining(&self) -> usize {
         self.pad.get_size_bytes() - self.consumed
     }
 
