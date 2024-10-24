@@ -24,6 +24,10 @@ impl OneTimePad {
         }
     }
 
+    pub fn get_remaining(&self) -> usize {
+        self.pad.get_size_bytes() - self.consumed
+    }
+
     pub fn encrypt(& mut self, data:Vec<u8>) -> Vec<u8> {
         let size = data.len();
         if self.consumed + size > self.pad.get_size_bytes() {
