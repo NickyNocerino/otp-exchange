@@ -60,6 +60,7 @@ impl OneTimePad {
     }
 
     pub fn decrypt_file(&mut self, target_source_file:&str, target_dest_file:&str) {
+        // For 1 time pads, encrypting and decryyping is the same, neat huh!
         self.encrypt_file(target_source_file, target_dest_file);
     }
 

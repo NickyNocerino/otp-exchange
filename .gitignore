@@ -27,3 +27,4 @@ Cargo.lock
 #me
 bin/
 temp/
+venv/
