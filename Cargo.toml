@@ -10,7 +10,7 @@ edition = "2021"
 name = "otp_exchange"
 
 # "cdylib" is necessary to produce a shared library for Python to import from.
-crate-type = ["cdylib"]
+crate-type = ["rlib"]
 
 [dependencies]
 rand = "0.8.5"
