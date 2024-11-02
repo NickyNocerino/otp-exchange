@@ -3,20 +3,16 @@ use std::fs;
 use crate::databook::DataBook;
 use crate::traits::*;
 
-use pyo3::prelude::*;
 
-#[pyclass]
 pub struct OneTimePad {
     pub pad:DataBook,
     pub consumed: usize,
 }
 
-#[pymethods]
 impl OneTimePad {
     pub const MAX_SHEETS: usize = 32;
     pub const MAX_BYTES: usize = 1024;
 
-    #[new]
     pub fn load_zip(target_zip:&str, target_dir:&str) -> Self {
         Self {
             pad: DataBook::from_zip(target_zip, target_dir),
