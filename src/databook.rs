@@ -159,7 +159,7 @@ impl GetData for DataBook {
         }
         let mut remainder:usize = index;
         for i in 0..self.size {
-            if self.lens[i] < remainder {
+            if self.lens[i] <= remainder {
                 remainder -= self.lens[i];
             }
             else {
