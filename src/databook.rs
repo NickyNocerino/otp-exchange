@@ -152,21 +152,20 @@ impl DataBook {
         }
 
         let mut out = Vec::<u8>::new();
-        let mut first:usize = index;
-        let mut last = index + n;
         let mut count:usize = 0;
 
         for i in 0..self.size {
-            if self.lens[i] + count <= first  {
+            if self.lens[i] + count <= index {
                 count  += self.lens[i];
             }
-            else if count + self.lens[i] >= first && count < last{
+            else if count + self.lens[i] >= index && count < (index + n){
                 let file_name = format!("DATASHEET{:#09}.bin", i);
                 let full_path = format!("{}/{}", *self.location.clone() ,file_name);
                 let sheet = DataSheet::from_file(&full_path);
-                let a = cmp::max(first as i64 - count as i64, 0) as usize;
-                let b = cmp::min(last - count, self.lens[i]) as usize;
-                out.append(&mut sheet.get_bytes(a, b));
+                out.append(&mut sheet.get_bytes(
+                    cmp::max(index as i64 - count as i64, 0) as usize,
+                    cmp::min((index +n) - count, self.lens[i]) as usize
+                ));
                 count += self.lens[i];
             }
             else {
@@ -174,7 +173,6 @@ impl DataBook {
             }
         }
         out
-
     }
 }
 
