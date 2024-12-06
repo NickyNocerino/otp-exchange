@@ -29,7 +29,7 @@ impl OneTimePad {
         if self.consumed + size > self.pad.get_size_bytes() {
             panic!("Attempting to encrypt beyond the size of pad")
         }
-        let pad_data = self.pad.get_bytes(self.consumed, size);
+        let pad_data = self.pad.get_bytes_fast(self.consumed, size);
         self.consumed += size;
         let mut out = Vec::<u8>::new();
         for i in 0..size {
@@ -44,7 +44,7 @@ impl OneTimePad {
         if self.consumed + size > self.pad.get_size_bytes() {
             panic!("Attempting to encrypt beyond the size of pad")
         }
-        let pad_data = self.pad.get_bytes(self.consumed, size);
+        let pad_data = self.pad.get_bytes_fast(self.consumed, size);
         self.consumed += size;
         let mut out = Vec::<u8>::new();
         for i in 0..size {
@@ -55,12 +55,12 @@ impl OneTimePad {
     }
 
     pub fn decrypt(& mut self, data:Vec<u8>) -> Vec<u8> {
-        // For 1 time pads, encrypting and decryyping is the same, neat huh!
+        // For 1 time pads, encrypting and decrypting is the same, neat huh!
         self.encrypt(data)
     }
 
     pub fn decrypt_file(&mut self, target_source_file:&str, target_dest_file:&str) {
-        // For 1 time pads, encrypting and decryyping is the same, neat huh!
+        // For 1 time pads, encrypting and decrypting is the same, neat huh!
         self.encrypt_file(target_source_file, target_dest_file);
     }
 
