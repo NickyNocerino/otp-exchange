@@ -10,8 +10,8 @@ pub struct OneTimePad {
 }
 
 impl OneTimePad {
-    pub const MAX_SHEETS: usize = 32;
-    pub const MAX_BYTES: usize = 1024;
+    pub const MAX_SHEETS: usize = 10 * 1024;
+    pub const MAX_BYTES: usize = 1024*1024;
 
     pub fn load_zip(target_zip:&str, target_dir:&str) -> Self {
         Self {
